@@ -291,11 +291,13 @@ What version of Apache HTTP Server is running on the target host?
 
 <ins>Summary:<ins>
 
+* I learned how to exploit network protocols to capture and analyze authentication hashes on a local network using a tool called Responder. This module showed me how vulnerabilities in services like LLMNR and SMB can expose credentials, allowing attackers to intercept them and perform offline brute-force attacks. Through this exercise, I gained a better understanding of network-based attacks and saw firsthand why securing internal network protocols is essential to prevent credential interception.
+
 <ins>Taks:<ins>
 
 When visiting the web service using the IP address, what is the domain that we are being redirected to?
 
-* `sudo nmap -p- --min-rate 1000 -sV [target IP]
+* `sudo nmap -p- --min-rate 1000 -sV [target IP]`
 
 * Now I will need to maually resolve the Domain name to the target IP. To do this editting the `/etc/hosts` is needed.
 
@@ -356,6 +358,42 @@ Now that responder is running use, we need to capture the hash from the RFI expl
 ![1](https://github.com/user-attachments/assets/d92c7b9b-fc31-4f0d-a1b1-83fc6b53d9e5)
 
 * We will be using John the ripper as a password cracker. It is an open-source password cracking tool, commonly referred to as “John.” Its primary purpose is to crack password hashes using dictionary attacks, brute force, or various other methods. 
+
+* Now we have the NTLMv2 hash, we need to save it. Use: `echo [insert hash] > hash`
+
+![1](https://github.com/user-attachments/assets/028a9594-52ea-4363-bb7d-97da358db715)
+
+* Next is I need a Worldlist (rockyou.txt), this is just a list of popular passwords. Parrot comes with the list, it just needs to be unzipped. Change directory to: `cd /usr/share/wordlists`
+
+![1](https://github.com/user-attachments/assets/8e0a33d9-78da-47c0-80c2-37352c90e13f)
+
+* To unzip: `sudo gunzip rockyou.txt.gz`
+
+* Once the hash file and wordlist is ready, you can start the cracking with: `sudo john --wordlist="rockyou.txt" hash`
+
+* After cracking the has, john give me the password = "badminton"
+
+We'll use a Windows service (i.e. running on the box) to remotely access the Responder machine using the password we recovered. What port TCP does it listen on?
+
+![1](https://github.com/user-attachments/assets/e633c4b3-1410-4a3e-aaa0-e15f6d943b18)
+
+* For the answer I need to use Evil-WinRM to establish remote access to the target system using WinRM (Windows Remote Management).
+
+* Now to try to coonect to target using the username and password found, using evil-winrm: `sudo evil-winrm -u Administrator -p badminton -i <target_ip_address>`
+
+* Powershell commmand to find flag: `Get-Childitem -Path c:\ -Recurse -Filter "flag*"`
+
+* `cat flag.txt` for answer.
+
+
+
+
+
+
+
+
+
+
 
 
 
