@@ -1,4 +1,8 @@
-# HTB
+# Hack The Box: Basics of Penetration Testing Tier 0 & 1 
+
+**Summary of Modules:**
+
+In completing these tasks I’ve gained foundational skills in network scanning, service enumeration, and identifying web application vulnerabilities. I learned how to exploit network protocols, capture authentication hashes, and understood the significance of securing internal services like LLMNR and SMB. Through various modules, I practiced using tools like Nmap for port scanning, Responder for network attacks, and gained hands-on experience with rsync for file transfer and enumeration. I explored web vulnerability techniques, such as brute-forcing login pages and locating hidden files or directories that could expose sensitive information. Overall, these exercises helped me understand core penetration testing concepts and the importance of proper configuration and security in network and web environments.
 
 # Tier 0
 
